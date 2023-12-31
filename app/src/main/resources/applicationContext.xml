@@ -11,5 +11,15 @@
     <context:property-placeholder location="application.properties"/>
     <context:annotation-config/>
 
+    <bean name="chatUserRepository" class="com.vntu.console.chat.app.repository.impl.ArrayChatUserRepository">
+        <constructor-arg>
+            <bean class="java.util.concurrent.ConcurrentHashMap"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.util.concurrent.atomic.AtomicInteger">
+                <constructor-arg value="1"/>
+            </bean>
+        </constructor-arg>
+    </bean>
 
 </beans>

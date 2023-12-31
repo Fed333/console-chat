@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.vntu.console.chat.app'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springVersion = '5.3.22'
+    slf4jVersion = '2.0.3'
+}
+
+dependencies {
+
+    implementation "org.springframework:spring-core:${springVersion}"
+    implementation "org.springframework:spring-context:${springVersion}"
+
+    compileOnly "org.projectlombok:lombok:1.18.24"
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+
+    testImplementation "junit:junit:4.13.2"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'com.vntu.console.chat.app.ConsoleChatApplication'
+}
+
+jar {
+    duplicatesStrategy = 'exclude'
+    enabled = true
+    manifest {
+        attributes 'Main-Class': 'com.vntu.console.chat.app.ConsoleChatApplication'
+    }
+    dependsOn configurations.runtimeClasspath
+
+    from sourceSets.main.output
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+
+    // Add specific Spring packages or classes that are not included automatically
+    from {
+        configurations.runtimeClasspath.findAll { it.name.startsWith('spring-') }.collect { zipTree(it) }
+    }
+}

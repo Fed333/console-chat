@@ -4,12 +4,20 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           https://www.springframework.org/schema/context/beans-context.xsd
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
                            https://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder location="application.properties"/>
     <context:annotation-config/>
+
+    <bean name="consoleChatApplicationRunner" class="com.vntu.console.chat.app.runner.ConsoleChatApplicationRunner">
+        <constructor-arg ref="socketServer"/>
+        <constructor-arg ref="socketClient"/>
+    </bean>
+
+    <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer"/>
+    <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient"/>
 
     <bean name="chatUserRepository" class="com.vntu.console.chat.app.repository.impl.ArrayChatUserRepository">
         <constructor-arg>

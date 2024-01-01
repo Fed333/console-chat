@@ -17,7 +17,14 @@
     </bean>
 
     <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer"/>
-    <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient"/>
+    <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient">
+        <constructor-arg ref="chatUserService"/>
+        <constructor-arg ref="inputParamsExtractor"/>
+    </bean>
+
+    <bean name="chatUserService" class="com.vntu.console.chat.app.service.ChatUserService">
+        <constructor-arg ref="chatUserRepository"/>
+    </bean>
 
     <bean name="chatUserRepository" class="com.vntu.console.chat.app.repository.impl.ArrayChatUserRepository">
         <constructor-arg>
@@ -25,9 +32,11 @@
         </constructor-arg>
         <constructor-arg>
             <bean class="java.util.concurrent.atomic.AtomicInteger">
-                <constructor-arg value="1"/>
+                <constructor-arg value="0"/>
             </bean>
         </constructor-arg>
     </bean>
+
+    <bean name="inputParamsExtractor" class="com.vntu.console.chat.app.component.input.params.InputParamsExtractor"/>
 
 </beans>

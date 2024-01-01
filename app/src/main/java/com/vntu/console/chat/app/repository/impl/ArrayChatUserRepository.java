@@ -5,12 +5,9 @@ import com.vntu.console.chat.app.repository.ChatUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +20,13 @@ public class ArrayChatUserRepository implements ChatUserRepository {
     @Override
     public List<ChatUser> findAll() {
         return new ArrayList<>(chatUsers.values());
+    }
+
+    @Override
+    public List<ChatUser> findAllByNickname(String nickname) {
+        return chatUsers.values().stream()
+                .filter(chatUser -> Objects.equals(nickname, chatUser.getNickname()))
+                .collect(Collectors.toList());
     }
 
     @Override

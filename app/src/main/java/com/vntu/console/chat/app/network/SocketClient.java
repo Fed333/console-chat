@@ -2,6 +2,7 @@ package com.vntu.console.chat.app.network;
 
 import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
+import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class SocketClient {
     private static final String QUIT_COMMAND = "QUIT";
 
     private final ChatUserService chatUserService;
-
     private final InputParamsExtractor paramsExtractor;
+    private final ChatUserOutMessagePrinter messagePrinter;
 
     public void startClient(Socket socket, String[] args) {
         log.info("Start client application...");
@@ -31,7 +32,7 @@ public class SocketClient {
 
         Scanner in = new Scanner(System.in);
         while(true) {
-            System.out.printf("%s#%s> ", chatUser.getNickname(), chatUser.getId());
+            messagePrinter.printPrompt(chatUser);
             String command = in.nextLine();
             if (command.equalsIgnoreCase(QUIT_COMMAND)) {
                 break;
@@ -54,7 +55,7 @@ public class SocketClient {
     private String promptNickName() {
         String nickname;
         Scanner in = new Scanner(System.in);
-        System.out.print("client#1> Enter name: ");
+        messagePrinter.printPromptMessage("client",1, "Enter name: ");
         nickname = in.nextLine();
         return nickname;
     }

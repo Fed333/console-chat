@@ -16,10 +16,13 @@
         <constructor-arg ref="socketClient"/>
     </bean>
 
-    <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer"/>
+    <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer">
+        <constructor-arg ref="serverOutMessagePrinter"/>
+    </bean>
     <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient">
         <constructor-arg ref="chatUserService"/>
         <constructor-arg ref="inputParamsExtractor"/>
+        <constructor-arg ref="chatUserOutMessagePrinter"/>
     </bean>
 
     <bean name="chatUserService" class="com.vntu.console.chat.app.service.ChatUserService">
@@ -39,4 +42,6 @@
 
     <bean name="inputParamsExtractor" class="com.vntu.console.chat.app.component.input.params.InputParamsExtractor"/>
 
+    <bean name="chatUserOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter"/>
+    <bean name="serverOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ServerOutMessagePrinter"/>
 </beans>

@@ -23,6 +23,10 @@ public class InputParamsExtractor {
         String[] params = input.substring(input.indexOf(' ')).trim().split("\\s");
         params = Arrays.stream(params).map(sanitizer::desanitize).toArray(String[]::new);
 
+        return extractedParams(params);
+    }
+
+    public ExtractedParams extractedParams(String[] params) {
         Map<String, Object> paramsMap = Arrays.stream(params)
                 .map(String::trim)
                 .filter(not(String::isEmpty))

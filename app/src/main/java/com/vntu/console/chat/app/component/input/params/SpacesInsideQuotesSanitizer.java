@@ -13,7 +13,7 @@ public class SpacesInsideQuotesSanitizer {
         boolean sanitize = false;
 
         for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == '"' && isNotEscapedQuote(chars, i)) {
+            if (chars[i] == '"' && isNotEscaped(chars, i)) {
                 sanitize = !sanitize;
             }
             if (chars[i] == ' ' && sanitize) {
@@ -27,7 +27,7 @@ public class SpacesInsideQuotesSanitizer {
         return input.replace(sanitizer, ' ');
     }
 
-    private static boolean isNotEscapedQuote(char[] chars, int i) {
+    private static boolean isNotEscaped(char[] chars, int i) {
         return i > 1 && chars[i - 1] != '\\' || i == 0;
     }
 

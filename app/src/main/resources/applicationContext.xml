@@ -10,6 +10,7 @@
 
     <context:property-placeholder location="application.properties"/>
     <context:annotation-config/>
+    <context:component-scan base-package="com.vntu.console.chat.app.configuration"/>
 
     <bean name="consoleChatApplicationRunner" class="com.vntu.console.chat.app.runner.ConsoleChatApplicationRunner">
         <constructor-arg ref="socketServer"/>
@@ -44,9 +45,6 @@
     </bean>
 
     <bean name="inputParamsExtractor" class="com.vntu.console.chat.app.component.input.params.InputParamsExtractor"/>
-
-    <bean name="chatUserOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter"/>
-    <bean name="serverOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ServerOutMessagePrinter"/>
 
     <bean name="serverShutdown" class="java.util.concurrent.atomic.AtomicBoolean">
         <constructor-arg value="false"/>

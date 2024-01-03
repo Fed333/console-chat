@@ -1,6 +1,8 @@
 package com.vntu.console.chat.app.handler;
 
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
+import com.vntu.console.chat.app.component.output.PromptMessageProvider;
+import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.network.socket.ChatUserSocketThreadHolder;
 import com.vntu.console.chat.app.network.socket.ChatUserSockets;
@@ -23,12 +25,14 @@ public class ServerAcceptConnectionHandler {
 
     private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
 
+    private final ServerOutMessagePrinter serverOutMessagePrinter;
+
     public void startConnectionHandling(Socket socket) {
         ChatUser chatUser = chatUserService.createChatUser("client");
         chatUser.setSessionStart(Instant.now());
         chatUserSockets.addSocket(chatUser.getId(), socket);
 
-        ChatUserOutMessagePrinter userOutMessagePrinter = new ChatUserOutMessagePrinter();
+        serverOutMessagePrinter.printlnMessage("Client#" + chatUser.getId() + " connected: " + socket.getInetAddress());
 
         Thread chatUserConnectionRequestHandler = new Thread(() -> {
             chatUserSocketThreadHolder.setChatUserSocket(socket);
@@ -38,7 +42,7 @@ public class ServerAcceptConnectionHandler {
                 String line = in.readLine();
                 while(line != null) {
                     //TODO add dispatching here...
-                    userOutMessagePrinter.printPromptMessage(chatUser, "Received line: " + line);
+                    serverOutMessagePrinter.printlnMessage("Received line: " + line);
                     line = in.readLine();
                 }
 

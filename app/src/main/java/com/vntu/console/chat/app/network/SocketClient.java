@@ -4,7 +4,6 @@ import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
 import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
-import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,9 +55,10 @@ public class SocketClient {
             try {
                 String inputLine = in.readLine();
 
-                ServerOutMessagePrinter serverMessagePrinter = new ServerOutMessagePrinter();
+//                ServerOutMessagePrinter serverMessagePrinter = new ServerOutMessagePrinter();
                 while (inputLine != null) {
-                    serverMessagePrinter.printlnPromptMessage(inputLine);
+//                    serverMessagePrinter.printlnMessage(inputLine);
+                    System.out.println("server>" + inputLine);
                     inputLine = in.readLine();
                 }
             } catch (IOException e) {

@@ -51,7 +51,7 @@ public class SocketServer {
                 Socket clientSocket;
                 try {
                     clientSocket = serverSocket.accept();
-                    messagePrinter.printlnPromptMessage("Client connected: " + clientSocket.getInetAddress());
+                    log.info("Client connected: {}", clientSocket.getInetAddress());
 
                     acceptConnectionHandler.startConnectionHandling(clientSocket);
                 } catch (IOException e) {

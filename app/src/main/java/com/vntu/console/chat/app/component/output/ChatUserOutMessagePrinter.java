@@ -24,7 +24,11 @@ public class ChatUserOutMessagePrinter {
         System.out.printf("%s#%s> ",username, id);
     }
 
+    public void printPromptMessage(ChatUser chatUser, String message) {
+        System.out.printf("%s#%s> %s", chatUser.getNickname(), chatUser.getId(), message);
+    }
+
     public void printPromptMessage(String username, Integer id, String message) {
-        System.out.printf("%s#%s> %s",username, id, message);
+        System.out.printf("%s#%s> %s", username, id, message);
     }
 }

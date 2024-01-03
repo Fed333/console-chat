@@ -18,6 +18,9 @@
 
     <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer">
         <constructor-arg ref="serverOutMessagePrinter"/>
+        <constructor-arg ref="chatUserService"/>
+        <constructor-arg ref="serverShutdown"/>
+        <constructor-arg ref="serverAcceptConnectionHandler"/>
     </bean>
     <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient">
         <constructor-arg ref="chatUserService"/>
@@ -44,4 +47,29 @@
 
     <bean name="chatUserOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter"/>
     <bean name="serverOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ServerOutMessagePrinter"/>
+
+    <bean name="serverShutdown" class="java.util.concurrent.atomic.AtomicBoolean">
+        <constructor-arg value="false"/>
+    </bean>
+
+    <bean name="serverAcceptConnectionHandler" class="com.vntu.console.chat.app.handler.ServerAcceptConnectionHandler"/>
+
+    <bean name="chatUserSockets" class="com.vntu.console.chat.app.network.socket.ChatUserSockets">
+        <constructor-arg>
+            <bean class="java.util.concurrent.ConcurrentHashMap"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="chatUserSocketThreadHolder" class="com.vntu.console.chat.app.network.socket.ChatUserSocketThreadHolder">
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+    </bean>
+
 </beans>

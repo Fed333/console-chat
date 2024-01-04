@@ -20,9 +20,18 @@ public class ChatUserOutMessagePrinter {
         monitoringOut.print(message);
     }
 
-    public void printfMessage(String message, Object... args) {
-        monitoringOut.printf(message, args);
+    public void printlnMessage(String message, PrintWriter printWriter) {
+        printWriter.println(message);
     }
+
+    public void printMessage(String message, PrintWriter printWriter) {
+        printWriter.print(message);
+    }
+
+    public void printfMessage(String message, PrintWriter printWriter, Object... args) {
+        printWriter.printf(message, args);
+    }
+
 
     public void printPrompt(ChatUser chatUser) {
         printPrompt(chatUser.getNickname(), chatUser.getId());

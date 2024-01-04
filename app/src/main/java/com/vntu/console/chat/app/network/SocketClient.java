@@ -1,9 +1,13 @@
 package com.vntu.console.chat.app.network;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
+import com.vntu.console.chat.app.component.output.PromptMessageProvider;
 import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
+import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CREATED_CHAT_USER_COMMAND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,23 +34,33 @@ public class SocketClient {
     private final ChatUserService chatUserService;
     private final InputParamsExtractor paramsExtractor;
     private final ChatUserOutMessagePrinter messagePrinter;
+    private final PromptMessageProvider promptMessageProvider;
+    private final ObjectMapper objectMapper;
+
+    private final AtomicReference<ChatUser> clientChatUser;
 
     public void startClient(Socket clientSocket, String[] args) {
         log.info("Start client application...");
         ExtractedParams params = paramsExtractor.extractedParams(args);
 
+        CountDownLatch createdChatUserRetrievalLatch = new CountDownLatch(1);
+
         Thread chatUserSenderThread = new Thread(() -> {
             log.info("Start client send requests thread...");
 
+            awaitForCreatedChatUserRetrievalFromServer(createdChatUserRetrievalLatch);
+            ChatUser chatUser = clientChatUser.get();
+
+            log.info("Retrieved chatUser {}", chatUser);
+
             PrintWriter out = getPrintWriter(clientSocket);
             Scanner in = new Scanner(System.in);
-            while(true) {
-                messagePrinter.printPrompt("client", 1);
+            while (true) {
+                messagePrinter.printPrompt(chatUser.getNickname(), chatUser.getId());
                 String messageLine = in.nextLine();
                 out.println(messageLine);
                 out.flush();
             }
-
         });
         chatUserSenderThread.start();
         //String nickname = promptNicknameIfNotSpecified(params);
@@ -55,11 +73,24 @@ public class SocketClient {
             try {
                 String inputLine = in.readLine();
 
+                System.out.println(promptMessageProvider.getServerPrompt() + inputLine);
+
+                if (inputLine.contains(CREATED_CHAT_USER_COMMAND)) {
+                    String createdUserJson = inputLine.substring(CREATED_CHAT_USER_COMMAND.length());
+                    ObjectReader objectReader = objectMapper.readerFor(ChatUser.class);
+
+                    ChatUser createdChatUser = objectReader.readValue(createdUserJson);
+
+                    clientChatUser.set(createdChatUser);
+                    createdChatUserRetrievalLatch.countDown();
+                }
+
 //                ServerOutMessagePrinter serverMessagePrinter = new ServerOutMessagePrinter();
                 while (inputLine != null) {
 //                    serverMessagePrinter.printlnMessage(inputLine);
-                    System.out.println("server>" + inputLine);
+
                     inputLine = in.readLine();
+                    System.out.println(promptMessageProvider.getServerPrompt() + inputLine);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -79,6 +110,16 @@ public class SocketClient {
             chatUserReceiverThread.join();
         } catch (InterruptedException e) {
             log.error("Couldn't join server threads.", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void awaitForCreatedChatUserRetrievalFromServer(CountDownLatch createdChatUserRetrievalLatch) {
+        try {
+            createdChatUserRetrievalLatch.await();
+        } catch (InterruptedException e) {
+            log.error("Couldn't await for created chat user retrieving.", e);
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }

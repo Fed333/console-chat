@@ -27,6 +27,11 @@
         <constructor-arg ref="chatUserService"/>
         <constructor-arg ref="inputParamsExtractor"/>
         <constructor-arg ref="chatUserOutMessagePrinter"/>
+        <constructor-arg ref="promptMessageProvider"/>
+        <constructor-arg ref="objectMapper"/>
+        <constructor-arg>
+            <bean class="java.util.concurrent.atomic.AtomicReference"/>
+        </constructor-arg>
     </bean>
 
     <bean name="chatUserService" class="com.vntu.console.chat.app.service.ChatUserService">

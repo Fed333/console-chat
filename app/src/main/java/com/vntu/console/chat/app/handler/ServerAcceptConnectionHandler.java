@@ -42,10 +42,11 @@ public class ServerAcceptConnectionHandler {
 
         Thread chatUserConnectionRequestHandler = new Thread(() -> {
             chatUserSocketThreadHolder.setChatUserSocket(socket);
-
             PrintWriter out = chatUserSocketThreadHolder.getChatUserWriter();
 
             String jsonChatUser = serializeChatUserToJson(chatUser);
+
+            serverOutMessagePrinter.printPrompt(out);
             out.print(CREATED_CHAT_USER_COMMAND);
             out.println(jsonChatUser);
             out.flush();

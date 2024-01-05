@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
-import com.vntu.console.chat.app.component.output.PromptMessageProvider;
-import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +32,6 @@ public class SocketClient {
     private final ChatUserService chatUserService;
     private final InputParamsExtractor paramsExtractor;
     private final ChatUserOutMessagePrinter messagePrinter;
-    private final PromptMessageProvider promptMessageProvider;
     private final ObjectMapper objectMapper;
 
     private final AtomicReference<ChatUser> clientChatUser;
@@ -73,10 +70,10 @@ public class SocketClient {
             try {
                 String inputLine = in.readLine();
 
-                System.out.println(promptMessageProvider.getServerPrompt() + inputLine);
+                messagePrinter.printlnMessage(inputLine);
 
                 if (inputLine.contains(CREATED_CHAT_USER_COMMAND)) {
-                    String createdUserJson = inputLine.substring(CREATED_CHAT_USER_COMMAND.length());
+                    String createdUserJson = extractCreatedUserJson(inputLine);
                     ObjectReader objectReader = objectMapper.readerFor(ChatUser.class);
 
                     ChatUser createdChatUser = objectReader.readValue(createdUserJson);
@@ -85,12 +82,10 @@ public class SocketClient {
                     createdChatUserRetrievalLatch.countDown();
                 }
 
-//                ServerOutMessagePrinter serverMessagePrinter = new ServerOutMessagePrinter();
                 while (inputLine != null) {
-//                    serverMessagePrinter.printlnMessage(inputLine);
 
                     inputLine = in.readLine();
-                    System.out.println(promptMessageProvider.getServerPrompt() + inputLine);
+                    messagePrinter.printlnMessage(inputLine);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -140,6 +135,10 @@ public class SocketClient {
             log.error("Couldn't obtain output stream of chat user socket.", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String extractCreatedUserJson(String inputLine) {
+        return inputLine.substring(inputLine.indexOf(CREATED_CHAT_USER_COMMAND) + CREATED_CHAT_USER_COMMAND.length());
     }
 
     private String promptNicknameIfNotSpecified(ExtractedParams params) {

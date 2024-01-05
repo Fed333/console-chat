@@ -18,6 +18,10 @@ public class ServerOutMessagePrinter extends MessagePrinter {
         System.out.print(promptMessageProvider.getServerPrompt());
     }
 
+    public void printPrompt(PrintWriter printWriter) {
+        printWriter.print(promptMessageProvider.getServerPrompt());
+    }
+
     public void printlnMessage(String message) {
         monitoringOut.print(promptMessageProvider.getServerPrompt());
         monitoringOut.println(message);

@@ -13,7 +13,6 @@ import java.net.Socket;
 
 
 @Slf4j
-
 @RequiredArgsConstructor
 public class ChatUserSocketThreadHolder {
 

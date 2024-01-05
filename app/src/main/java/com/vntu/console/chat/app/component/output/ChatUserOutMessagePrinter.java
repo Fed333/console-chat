@@ -50,6 +50,10 @@ public class ChatUserOutMessagePrinter extends MessagePrinter {
         consoleOutPrint(promptMessageProvider.getChatUserPrompt(username, id));
     }
 
+    public void printPrompt(ChatUser chatUser, PrintWriter out) {
+        out.print(promptMessageProvider.getChatUserPrompt(chatUser));
+    }
+
     public void printPromptMessage(ChatUser chatUser, String message) {
         consoleOutPrintf("%s %s", promptMessageProvider.getChatUserPrompt(chatUser), message);
     }

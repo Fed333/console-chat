@@ -15,15 +15,14 @@ public class ServerOutMessagePrinter extends MessagePrinter {
     private final PromptMessageProvider promptMessageProvider;
 
     public void printPrompt() {
-        System.out.print(promptMessageProvider.getServerPrompt());
+        consoleOutPrint(promptMessageProvider.getServerPrompt());
     }
 
     public void printPrompt(PrintWriter printWriter) {
         printWriter.print(promptMessageProvider.getServerPrompt());
     }
 
-    public void printlnMessage(String message) {
-        monitoringOut.print(promptMessageProvider.getServerPrompt());
+    public void printlnPromptMessage(String message) {
         monitoringOut.println(message);
 
         consoleOutPrintln(message);
@@ -31,27 +30,18 @@ public class ServerOutMessagePrinter extends MessagePrinter {
     }
 
     public void printfMessage(String message, Object... params) {
-        monitoringOut.print(promptMessageProvider.getServerPrompt());
         monitoringOut.printf(message, params);
 
         consoleOutPrintf(message, params);
         printPrompt();
     }
 
-    public void printlnMessage(ChatUser chatUser, String message) {
-        monitoringOut.print(promptMessageProvider.getChatUserPrompt(chatUser));
+    public void printlnPromptMessage(String message, PrintWriter printWriter) {
+        monitoringOut.print(promptMessageProvider.getServerPrompt());
         monitoringOut.println(message);
 
-        consoleOutPrintln(message);
-        printPrompt();
-    }
-
-    public void printlnMessage(String message, PrintWriter printWriter) {
-        printWriter.print(promptMessageProvider.getServerPrompt());
+        printPrompt(printWriter);
         printWriter.println(message);
-
-        consoleOutPrintln(message);
-        printPrompt();
     }
 
     private void preDestroy()  {

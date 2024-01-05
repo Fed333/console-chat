@@ -53,16 +53,16 @@ public class SocketClient {
             PrintWriter out = getPrintWriter(clientSocket);
             Scanner in = new Scanner(System.in);
             while (true) {
-                messagePrinter.printPrompt(chatUser.getNickname(), chatUser.getId());
+                messagePrinter.printPrompt(chatUser);
                 String messageLine = in.nextLine();
+                log.info("Prompted chatUser message: {}", messageLine);
+
+                messagePrinter.printPrompt(chatUser, out);
                 out.println(messageLine);
                 out.flush();
             }
         });
         chatUserSenderThread.start();
-        //String nickname = promptNicknameIfNotSpecified(params);
-        //ChatUser chatUser = chatUserService.createChatUser(nickname);
-
 
         BufferedReader in = getBufferedReader(clientSocket);
         Thread chatUserReceiverThread = new Thread(() -> {
@@ -71,7 +71,6 @@ public class SocketClient {
                 String inputLine = in.readLine();
 
                 messagePrinter.printlnMessage(inputLine);
-
                 if (inputLine.contains(CREATED_CHAT_USER_COMMAND)) {
                     String createdUserJson = extractCreatedUserJson(inputLine);
                     ObjectReader objectReader = objectMapper.readerFor(ChatUser.class);
@@ -83,9 +82,10 @@ public class SocketClient {
                 }
 
                 while (inputLine != null) {
-
                     inputLine = in.readLine();
+                    log.info("Received server message: {}", inputLine);
                     messagePrinter.printlnMessage(inputLine);
+                    messagePrinter.printPrompt(clientChatUser.get());
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

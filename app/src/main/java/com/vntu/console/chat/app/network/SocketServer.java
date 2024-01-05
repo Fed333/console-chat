@@ -2,6 +2,7 @@ package com.vntu.console.chat.app.network;
 
 import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
 import com.vntu.console.chat.app.handler.ServerAcceptConnectionHandler;
+import com.vntu.console.chat.app.handler.ServerMessagePromptCommandHandler;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ public class SocketServer {
 
     private final ServerAcceptConnectionHandler acceptConnectionHandler;
 
+    private final ServerMessagePromptCommandHandler serverMessagePromptHandler;
+
     public void startServer(ServerSocket serverSocket, String[] args) {
         log.info("Start server application...");
 
@@ -35,11 +38,14 @@ public class SocketServer {
             while (true) {
                 messagePrinter.printPrompt();
                 String command = in.nextLine();
-                if (command.equalsIgnoreCase(QUIT_COMMAND)) {
+                if (command.toUpperCase().startsWith(QUIT_COMMAND)) {
                     //TODO disconnect all connected clients
                     serverShutdown.set(true);
+                    log.info("Server shutdown.");
+                    messagePrinter.printfMessage("Bye");
                     break;
                 }
+                serverMessagePromptHandler.handleServerPromptCommand(command);
             }
         });
         serverPromptThread.start();

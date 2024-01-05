@@ -10,6 +10,8 @@ public interface ChatUserRepository {
 
     List<ChatUser> findAllByNickname(String nickname);
 
+    List<ChatUser> findAllByLunaUser(boolean lunaUser);
+
     ChatUser save(ChatUser user);
 
     void delete(ChatUser user);

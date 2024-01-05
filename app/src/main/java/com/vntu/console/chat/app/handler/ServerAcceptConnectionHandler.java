@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vntu.console.chat.app.component.output.ServerOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
-import com.vntu.console.chat.app.network.protocol.ProtocolMessages;
 import com.vntu.console.chat.app.network.socket.ChatUserSocketThreadHolder;
 import com.vntu.console.chat.app.network.socket.ChatUserSockets;
 import com.vntu.console.chat.app.service.ChatUserService;
@@ -56,13 +55,13 @@ public class ServerAcceptConnectionHandler {
                 String line = in.readLine();
                 while (line != null) {
                     //TODO add dispatching here...
-                    serverOutMessagePrinter.printlnMessage("Received line: " + line);
+                    serverOutMessagePrinter.printlnPromptMessage(line);
                     line = in.readLine();
                 }
 
             } catch (IOException e) {
                 log.error("Couldn't read a line from chatUser socket input stream.", e);
-                serverOutMessagePrinter.printlnMessage("ChatUser " + chatUser.getNickname() + "#" + chatUser.getId() + " has been disconnected.");
+                serverOutMessagePrinter.printlnPromptMessage("ChatUser " + chatUser.getNickname() + "#" + chatUser.getId() + " has been disconnected.");
             }
 
         });

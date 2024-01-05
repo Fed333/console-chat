@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +27,13 @@ public class ArrayChatUserRepository implements ChatUserRepository {
     public List<ChatUser> findAllByNickname(String nickname) {
         return chatUsers.values().stream()
                 .filter(chatUser -> Objects.equals(nickname, chatUser.getNickname()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChatUser> findAllByLunaUser(boolean lunaUser) {
+        return findAll().stream()
+                .filter(chatUser -> lunaUser == chatUser.isLunaUser())
                 .collect(Collectors.toList());
     }
 

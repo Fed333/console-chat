@@ -38,7 +38,7 @@ public class ServerAcceptConnectionHandler {
         chatUser.setSessionStart(Instant.now());
         chatUserSockets.addSocket(chatUser.getId(), socket);
 
-        serverOutMessagePrinter.printlnMessage("Client#" + chatUser.getId() + " connected: " + socket.getInetAddress());
+        serverOutMessagePrinter.printfMessage("Client#%d connected: %s:%s\n", chatUser.getId(), socket.getInetAddress(), socket.getPort());
 
         Thread chatUserConnectionRequestHandler = new Thread(() -> {
             chatUserSocketThreadHolder.setChatUserSocket(socket);

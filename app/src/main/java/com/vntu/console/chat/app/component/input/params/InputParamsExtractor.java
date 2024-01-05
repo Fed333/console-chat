@@ -13,14 +13,24 @@ import static java.util.function.Predicate.not;
 public class InputParamsExtractor {
 
     public String extractCommand(String input){
-        return input.substring(0, input.indexOf(' '));
+        int spaceIndex = input.indexOf(' ');
+        if (spaceIndex != -1) {
+            return input.substring(0, spaceIndex);
+        } else {
+            return input;
+        }
     }
 
     public ExtractedParams extractParams(String input) {
+        int firstSpaceIndex = input.indexOf(' ');
+        if (firstSpaceIndex == -1) {
+            return extractedParams(new String[]{});
+        }
+
         SpacesInsideQuotesSanitizer sanitizer = new SpacesInsideQuotesSanitizer('\u0000');
         input = sanitizer.sanitize(input);
 
-        String[] params = input.substring(input.indexOf(' ')).trim().split("\\s");
+        String[] params = input.substring(firstSpaceIndex).trim().split("\\s");
         params = Arrays.stream(params).map(sanitizer::desanitize).toArray(String[]::new);
 
         return extractedParams(params);

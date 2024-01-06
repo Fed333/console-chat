@@ -19,6 +19,12 @@ public class ArrayChatUserRepository implements ChatUserRepository {
     private final AtomicInteger sequenceId;
 
     @Override
+    public Optional<ChatUser> findByIdAndNickname(Integer id, String nickname) {
+        return Optional.ofNullable(chatUsers.get(id))
+                .filter(user -> Objects.equals(user.getNickname(), nickname));
+    }
+
+    @Override
     public List<ChatUser> findAll() {
         return new ArrayList<>(chatUsers.values());
     }

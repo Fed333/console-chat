@@ -23,14 +23,11 @@ import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CREATE
 public class ServerAcceptConnectionHandler {
 
     private final ChatUserService chatUserService;
-
     private final ChatUserSockets chatUserSockets;
-
     private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
-
     private final ServerOutMessagePrinter serverOutMessagePrinter;
-
     private final ObjectMapper objectMapper;
+    private final ServerRequestMessageHandler serverRequestMessageHandler;
 
     public void startConnectionHandling(Socket socket) {
         ChatUser chatUser = chatUserService.createChatUser("client");
@@ -52,11 +49,12 @@ public class ServerAcceptConnectionHandler {
 
             BufferedReader in = chatUserSocketThreadHolder.getChatUserReader();
             try {
-                String line = in.readLine();
-                while (line != null) {
-                    //TODO add dispatching here...
-                    serverOutMessagePrinter.printlnPromptMessage(line);
-                    line = in.readLine();
+                String requestMessage = in.readLine();
+                while (requestMessage != null) {
+                    serverOutMessagePrinter.printlnPromptMessage(requestMessage);
+
+                    requestMessage = in.readLine();
+                    serverRequestMessageHandler.handleRequest(requestMessage);
                 }
 
             } catch (IOException e) {

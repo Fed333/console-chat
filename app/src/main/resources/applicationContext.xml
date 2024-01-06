@@ -56,6 +56,7 @@
 
     <bean name="serverAcceptConnectionHandler" class="com.vntu.console.chat.app.handler.ServerAcceptConnectionHandler"/>
     <bean name="serverMessagePromptHandler" class="com.vntu.console.chat.app.handler.ServerMessagePromptCommandHandler"/>
+    <bean name="serverRequestMessageHandler" class="com.vntu.console.chat.app.handler.ServerRequestMessageHandler"/>
 
     <bean name="chatUserSockets" class="com.vntu.console.chat.app.network.socket.ChatUserSockets">
         <constructor-arg>
@@ -74,6 +75,10 @@
             <bean class="java.lang.ThreadLocal"/>
         </constructor-arg>
     </bean>
+
+    <bean name="broadcastMessagesSender" class="com.vntu.console.chat.app.network.component.BroadcastMessagesSender"/>
+
+    <bean name="chatUserFromPromptExtractor" class="com.vntu.console.chat.app.network.protocol.ChatUserFromPromptExtractor"/>
 
     <bean name="serverDispatcherCommand" class="com.vntu.console.chat.app.dispatcher.server.DispatcherCommand">
         <constructor-arg>

@@ -1,6 +1,6 @@
 package com.vntu.console.chat.app.dispatcher.server.command;
 
-import java.util.Map;
+import com.vntu.console.chat.app.dispatcher.server.ChatUserRequest;
 
 /**
  * Interface, designed for different console commands.
@@ -8,6 +8,6 @@ import java.util.Map;
  * */
 public interface ConsoleCommand {
 
-    void process(Map<String, Object> params);
+    void process(ChatUserRequest chatUserRequest);
 
 }

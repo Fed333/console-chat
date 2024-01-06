@@ -10,4 +10,7 @@ public interface ConsoleCommand {
 
     void process(ChatUserRequest chatUserRequest);
 
+    String getDescription();
+
+    String getSynopsis();
 }

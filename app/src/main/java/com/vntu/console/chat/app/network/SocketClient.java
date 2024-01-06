@@ -1,7 +1,5 @@
 package com.vntu.console.chat.app.network;
 
-import com.vntu.console.chat.app.component.input.params.ExtractedParams;
-import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +69,11 @@ public class SocketClient {
 
                     clientChatUser.set(createdChatUser);
                     createdChatUserRetrievalLatch.countDown();
+                } else {
+                    log.info("Violation of the protocol. Server didn't responded with created user.");
+                    messagePrinter.printlnMessage("Bad response from server. Disconnect client.");
+                    isClientDisconnected.set(true);
+                    return;
                 }
 
                 while (!isClientDisconnected.get()) {
@@ -92,7 +95,6 @@ public class SocketClient {
 
                     messagePrinter.printlnMessage(inputLine);
                     messagePrinter.printPrompt(clientChatUser.get());
-
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -44,9 +44,8 @@ public class ServerAcceptConnectionHandler {
 
             String jsonChatUser = chatUserToJsonConverter.convert(chatUser);
 
-            serverOutMessagePrinter.printPrompt(out);
-            out.print(CREATED_CHAT_USER_COMMAND);
-            out.println(jsonChatUser);
+            printCreatedChatUserCommand(out, jsonChatUser);
+            printGreetingMessage(out);
             out.flush();
 
             BufferedReader in = chatUserSocketThreadHolder.getChatUserReader();
@@ -72,6 +71,18 @@ public class ServerAcceptConnectionHandler {
         });
         chatUserConnectionRequestHandler.setDaemon(true);
         chatUserConnectionRequestHandler.start();
+    }
+
+    private void printGreetingMessage(PrintWriter out) {
+        serverOutMessagePrinter.printlnPromptMessage("Welcome to the console network chat bot.", out);
+        serverOutMessagePrinter.printlnPromptMessage("Enter HELP. To see the commands synopsis.", out);
+        serverOutMessagePrinter.printlnPromptMessage("Please change your nickname with the following command: NAME <nickname>", out);
+    }
+
+    private void printCreatedChatUserCommand(PrintWriter out, String jsonChatUser) {
+        serverOutMessagePrinter.printPrompt(out);
+        out.print(CREATED_CHAT_USER_COMMAND);
+        out.println(jsonChatUser);
     }
 
     private boolean isQuitCommandEntered(String requestMessage) {

@@ -33,4 +33,14 @@ public class QuitConsoleCommand implements ConsoleCommand {
         serverOutMessagePrinter.printlnPromptMessage(protocolMessageBuilder.buildDisconnectUserCommandMessage(), chatUserWriter);
         chatUserWriter.flush();
     }
+
+    @Override
+    public String getDescription() {
+        return "Disconnects a user and exits from the console. Example: QUIT";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "QUIT";
+    }
 }

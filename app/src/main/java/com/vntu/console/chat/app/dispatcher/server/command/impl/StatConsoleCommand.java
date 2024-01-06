@@ -42,4 +42,14 @@ public class StatConsoleCommand implements ConsoleCommand {
         chatUserWriter.println(joiner);
         chatUserWriter.flush();
     }
+
+    @Override
+    public String getDescription() {
+        return "Prints statistic about online users. Example: STATS";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "STATS";
+    }
 }

@@ -36,6 +36,18 @@ public class ServerOutMessagePrinter extends MessagePrinter {
         printPrompt();
     }
 
+    public void printlnMessage(String message, PrintWriter printWriter) {
+        monitoringOut.println(message);
+
+        printWriter.println(message);
+    }
+
+    public void printMessage(String message, PrintWriter chatUserWriter) {
+        monitoringOut.print(message);
+
+        chatUserWriter.print(message);
+    }
+
     public void printlnPromptMessage(String message, PrintWriter printWriter) {
         monitoringOut.print(promptMessageProvider.getServerPrompt());
         monitoringOut.println(message);
@@ -47,4 +59,5 @@ public class ServerOutMessagePrinter extends MessagePrinter {
     private void preDestroy()  {
         monitoringOut.close();
     }
+
 }

@@ -42,4 +42,14 @@ public class MessageConsoleCommand implements ConsoleCommand {
         receiverPrintWriter.flush();
         log.info("Sent message: {} to {}", message, receiverUserName);
     }
+
+    @Override
+    public String getDescription() {
+        return "Sends a message to the given client. Example: MESG client#1 \"Hello client\"";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "MESG <nickname>#<id> \"<message>\"";
+    }
 }

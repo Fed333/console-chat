@@ -1,18 +1,12 @@
 package com.vntu.console.chat.app.service;
 
 import com.vntu.console.chat.app.entity.ChatUser;
-import com.vntu.console.chat.app.entity.dto.StatChatUser;
-import com.vntu.console.chat.app.network.socket.ChatUserSockets;
 import com.vntu.console.chat.app.repository.ChatUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.converter.Converter;
 
-import java.net.Socket;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,6 +27,7 @@ public class ChatUserService {
     }
 
     public ChatUser createChatUser(String nickname) {
+        nickname = nickname.replace(' ', '_');
         ChatUser chatUser = ChatUser.builder()
                 .nickname(nickname)
                 .lunaUser(true).build();

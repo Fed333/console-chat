@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Map;
 
 @Slf4j
@@ -29,6 +30,10 @@ public class DispatcherCommand {
                 printEcho(request.getCommandMessage());
             }
         }
+    }
+
+    public Map<String, ConsoleCommand> getServerCommands() {
+        return Collections.unmodifiableMap(serverCommands);
     }
 
     private void printEcho(String command) {

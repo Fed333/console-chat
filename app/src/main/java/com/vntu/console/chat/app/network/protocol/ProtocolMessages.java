@@ -9,6 +9,7 @@ public final class ProtocolMessages {
     public static final String CLOSE_SERVER_PROMPT_COMMAND = "CLOSE:";
 
 
+    public final static String CLIENT_HELP_COMMAND = "HELP";
     public static final String CLIENT_QUIT_COMMAND = "QUIT";
 
     private ProtocolMessages() {}

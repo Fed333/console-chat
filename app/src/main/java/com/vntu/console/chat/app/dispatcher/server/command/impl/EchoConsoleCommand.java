@@ -53,6 +53,16 @@ public class EchoConsoleCommand implements ConsoleCommand {
         chatUserWriter.flush();
     }
 
+    @Override
+    public String getDescription() {
+        return "Enables server echo messages. Is set to true by default. Example: ECHO OFF";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "ECHO [ON | OFF]";
+    }
+
     private void printEchoBadSyntax(String message, PrintWriter chatUserWriter) {
         serverOutMessagePrinter.printlnPromptMessage(message, chatUserWriter);
         serverOutMessagePrinter.printlnPromptMessage("Please use [ON | OFF]", chatUserWriter);

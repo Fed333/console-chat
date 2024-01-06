@@ -45,4 +45,13 @@ public class NameConsoleCommand implements ConsoleCommand {
         chatUserWriter.flush();
     }
 
+    @Override
+    public String getDescription() {
+        return "Changes a nickname of the current user. Example: NAME roman";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "NAME <nickname>";
+    }
 }

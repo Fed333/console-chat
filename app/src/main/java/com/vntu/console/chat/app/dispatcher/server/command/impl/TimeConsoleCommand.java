@@ -44,4 +44,14 @@ public class TimeConsoleCommand implements ConsoleCommand {
 
         serverOutMessagePrinter.printlnPromptMessage(message, chatUserWriter);
     }
+
+    @Override
+    public String getDescription() {
+        return "Prints a time measurements of current session duration. Example: TIME";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "TIME";
+    }
 }

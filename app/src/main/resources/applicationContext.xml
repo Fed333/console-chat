@@ -93,6 +93,7 @@
                 <entry key="BCST" value-ref="serverBroadcastConsoleCommand"/>
                 <entry key="QUIT" value-ref="serverQuitConsoleCommand"/>
                 <entry key="TIME" value-ref="serverTimeConsoleCommand"/>
+                <entry key="HELP" value-ref="serverHelpConsoleCommand"/>
             </map>
         </constructor-arg>
     </bean>
@@ -104,6 +105,7 @@
     <bean name="serverBroadcastConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.BroadcastConsoleCommand"/>
     <bean name="serverQuitConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.QuitConsoleCommand"/>
     <bean name="serverTimeConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.TimeConsoleCommand"/>
+    <bean name="serverHelpConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.HelpConsoleCommand"/>
 
     <bean name="protocolMessageBuilder" class="com.vntu.console.chat.app.network.protocol.ProtocolMessageBuilder"/>
 

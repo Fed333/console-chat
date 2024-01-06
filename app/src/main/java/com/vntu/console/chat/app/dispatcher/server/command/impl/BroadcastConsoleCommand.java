@@ -31,4 +31,14 @@ public class BroadcastConsoleCommand implements ConsoleCommand {
 
         broadcastMessagesSender.broadCastMessagesToChatUsers(chatUser, message);
     }
+
+    @Override
+    public String getDescription() {
+        return "Broadcasts messages to all connected clients. Example: BCST \"Broadcast message\"";
+    }
+
+    @Override
+    public String getSynopsis() {
+        return "BCST \"<message>\"";
+    }
 }

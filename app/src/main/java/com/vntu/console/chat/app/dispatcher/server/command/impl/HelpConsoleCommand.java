@@ -54,7 +54,7 @@ public class HelpConsoleCommand implements ConsoleCommand {
 
         serverOutMessagePrinter.printlnMessage("The commands are case insensitive.", chatUserWriter);
         serverOutMessagePrinter.printlnMessage("Please use double quotes to pass messages with spaces.", chatUserWriter);
-        serverOutMessagePrinter.printlnMessage("To shutdown the server enter CLOSE: command in the server console.", chatUserWriter);
+        serverOutMessagePrinter.printlnMessage("To shutdown the server enter CLOSE command in the server console.", chatUserWriter);
 
         chatUserWriter.flush();
     }

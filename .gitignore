@@ -9,4 +9,4 @@ build
 
 # Ignore logs directory
 .logs
-/monitoring/
+/chat-history/

@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 @Configuration
 public class MonitoringConfiguration {
 
+    private static final String CHAT_HISTORY_FOLDER = "chat-history";
+
     @Bean
     public PromptMessageProvider promptMessageProvider() {
         return new PromptMessageProvider();
@@ -34,7 +36,7 @@ public class MonitoringConfiguration {
     private PrintWriter openServerPrintWriter() {
         log.info("Opening server print writer...");
         try {
-            PrintWriter printWriter = new PrintWriter(new FileOutputStream("monitoring/server.txt", true), true);
+            PrintWriter printWriter = new PrintWriter(new FileOutputStream(CHAT_HISTORY_FOLDER + "/server.txt", true), true);
             log.info("Server print writer was opened successfully.");
             return printWriter;
 
@@ -47,7 +49,7 @@ public class MonitoringConfiguration {
     private PrintWriter openClientPrintWriter() {
         log.info("Opening client print writer...");
         try {
-            PrintWriter printWriter = new PrintWriter(new FileOutputStream("monitoring/clients.txt", true), true);
+            PrintWriter printWriter = new PrintWriter(new FileOutputStream(CHAT_HISTORY_FOLDER + "/clients.txt", true), true);
             log.info("Client print writer was opened successfully.");
             return printWriter;
 

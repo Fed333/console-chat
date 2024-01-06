@@ -8,36 +8,36 @@ import java.io.PrintWriter;
 @RequiredArgsConstructor
 public class ChatUserOutMessagePrinter extends MessagePrinter {
 
-    private final PrintWriter monitoringOut;
+    private final PrintWriter chatHistoryOut;
 
     private final PromptMessageProvider promptMessageProvider;
 
     public void printlnMessage(String message) {
-        monitoringOut.println(message);
+        chatHistoryOut.println(message);
 
         consoleOutPrintln(message);
     }
 
     public void printMessage(String message) {
-        monitoringOut.print(message);
+        chatHistoryOut.print(message);
 
         consoleOutPrint(message);
     }
 
     public void printlnMessage(String message, PrintWriter printWriter) {
-        monitoringOut.println(message);
+        chatHistoryOut.println(message);
 
         printWriter.println(message);
     }
 
     public void printMessage(String message, PrintWriter printWriter) {
-        monitoringOut.print(message);
+        chatHistoryOut.print(message);
 
         printWriter.print(message);
     }
 
     public void printfMessage(String message, PrintWriter printWriter, Object... args) {
-        monitoringOut.printf(message, args);
+        chatHistoryOut.printf(message, args);
 
         printWriter.printf(message, args);
     }
@@ -71,6 +71,6 @@ public class ChatUserOutMessagePrinter extends MessagePrinter {
     }
 
     private void preDestroy()  {
-        monitoringOut.close();
+        chatHistoryOut.close();
     }
 }

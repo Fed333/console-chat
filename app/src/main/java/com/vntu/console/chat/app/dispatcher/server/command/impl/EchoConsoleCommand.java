@@ -26,10 +26,13 @@ public class EchoConsoleCommand implements ConsoleCommand {
         log.info("Process ECHO command for chatUser: {}", request.getChatUser());
 
         ChatUser chatUser = request.getChatUser();
+        PrintWriter chatUserWriter = chatUserSocketThreadHolder.getChatUserWriter();
+
         String turnEcho = request.getParameterByOrder(0);
 
         if (turnEcho == null) {
             log.info("No echo options specified!");
+            printEchoBadSyntax("Bad syntax. No echo option was specified.", chatUserWriter);
             return;
         }
 
@@ -39,12 +42,20 @@ public class EchoConsoleCommand implements ConsoleCommand {
             chatUser.setLunaUser(false);
         } else {
             log.info("Wrong ECHO parameter: {}", turnEcho);
+            printEchoBadSyntax("No valid echo option was specified.", chatUserWriter);
+            return;
         }
 
-        PrintWriter chatUserWriter = chatUserSocketThreadHolder.getChatUserWriter();
+        chatUserService.save(chatUser);
 
-        serverOutMessagePrinter.printlnPromptMessage(protocolMessageBuilder.buildUpdateChatUserCommandMessage(chatUser), chatUserWriter);
+        String messageServerResponse = protocolMessageBuilder.buildUpdateChatUserCommandMessage(chatUser);
+        serverOutMessagePrinter.printlnPromptMessage(messageServerResponse, chatUserWriter);
         chatUserWriter.flush();
+    }
+
+    private void printEchoBadSyntax(String message, PrintWriter chatUserWriter) {
+        serverOutMessagePrinter.printlnPromptMessage(message, chatUserWriter);
+        serverOutMessagePrinter.printlnPromptMessage("Please use [ON | OFF]", chatUserWriter);
     }
 
     private boolean isOn(String turnEcho) {

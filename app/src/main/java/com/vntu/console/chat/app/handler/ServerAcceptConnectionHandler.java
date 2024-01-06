@@ -66,6 +66,7 @@ public class ServerAcceptConnectionHandler {
             } catch (IOException e) {
                 log.error("Couldn't read a line from chatUser socket input stream.", e);
                 serverOutMessagePrinter.printlnPromptMessage("ChatUser " + chatUser.getNickname() + "#" + chatUser.getId() + " has been disconnected.");
+                chatUserService.delete(chatUser);
             }
 
         });

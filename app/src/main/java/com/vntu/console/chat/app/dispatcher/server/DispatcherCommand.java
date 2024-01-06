@@ -1,8 +1,6 @@
 package com.vntu.console.chat.app.dispatcher.server;
 
-import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.dispatcher.server.command.ConsoleCommand;
-import com.vntu.console.chat.app.entity.ChatUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -43,6 +40,10 @@ public class ChatUserSockets {
         return chatUsersSockets.get(id);
     }
 
+    public List<Socket> getAllUsersSockets() {
+        return new ArrayList<>(chatUsersSockets.values());
+    }
+
     public List<Socket> getLunaUserSockets() {
         List<ChatUser> lunaChatUsers = chatUserService.findAllLunaChatUsers();
 
@@ -61,5 +62,4 @@ public class ChatUserSockets {
             throw new RuntimeException(e);
         }
     }
-
 }

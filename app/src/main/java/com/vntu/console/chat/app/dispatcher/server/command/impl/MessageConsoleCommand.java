@@ -17,7 +17,6 @@ import java.net.Socket;
 @RequiredArgsConstructor
 public class MessageConsoleCommand implements ConsoleCommand {
 
-    private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
     private final ChatUserOutMessagePrinter chatUserOutMessagePrinter;
     private final ChatUserSockets chatUserSockets;
 

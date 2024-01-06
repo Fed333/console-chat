@@ -55,11 +55,19 @@ public class ChatUserOutMessagePrinter extends MessagePrinter {
     }
 
     public void printPromptMessage(ChatUser chatUser, String message) {
-        consoleOutPrintf("%s %s", promptMessageProvider.getChatUserPrompt(chatUser), message);
+        consoleOutPrintf("%s%s", promptMessageProvider.getChatUserPrompt(chatUser), message);
+    }
+
+    public void printPromptMessage(ChatUser chatUser, String message, PrintWriter printWriter) {
+        printWriter.printf("%s%s", promptMessageProvider.getChatUserPrompt(chatUser), message);
+    }
+
+    public void printlnPromptMessage(ChatUser chatUser, String message, PrintWriter printWriter) {
+        printWriter.printf("%s%s\n", promptMessageProvider.getChatUserPrompt(chatUser), message);
     }
 
     public void printPromptMessage(String username, Integer id, String message) {
-        consoleOutPrintf("%s %s", promptMessageProvider.getChatUserPrompt(username, id), message);
+        consoleOutPrintf("%s%s", promptMessageProvider.getChatUserPrompt(username, id), message);
     }
 
     private void preDestroy()  {

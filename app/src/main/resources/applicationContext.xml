@@ -85,6 +85,7 @@
                 <entry key="ECHO" value-ref="serverEchoConsoleCommand"/>
                 <entry key="STAT" value-ref="serverStatConsoleCommand"/>
                 <entry key="MESG" value-ref="serverMessageConsoleCommand"/>
+                <entry key="BCST" value-ref="serverBroadcastConsoleCommand"/>
             </map>
         </constructor-arg>
     </bean>
@@ -93,6 +94,7 @@
     <bean name="serverEchoConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.EchoConsoleCommand"/>
     <bean name="serverStatConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.StatConsoleCommand"/>
     <bean name="serverMessageConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.MessageConsoleCommand"/>
+    <bean name="serverBroadcastConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.BroadcastConsoleCommand"/>
 
     <bean name="protocolMessageBuilder" class="com.vntu.console.chat.app.network.protocol.ProtocolMessageBuilder"/>
 

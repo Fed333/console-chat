@@ -61,6 +61,7 @@ public class SocketClient {
                 out.flush();
             }
         });
+        chatUserSenderThread.setDaemon(true);
         chatUserSenderThread.start();
 
         BufferedReader in = getBufferedReader(clientSocket);
@@ -104,6 +105,7 @@ public class SocketClient {
                 throw new RuntimeException(e);
             }
         });
+        chatUserReceiverThread.setDaemon(true);
         chatUserReceiverThread.start();
 //        while(true) {
 ////            messagePrinter.printPrompt(chatUser);
@@ -114,7 +116,6 @@ public class SocketClient {
 //        }
 
         try {
-            chatUserSenderThread.join();
             chatUserReceiverThread.join();
             log.info("User has been disconnected. Shutdown the client application.");
         } catch (InterruptedException e) {

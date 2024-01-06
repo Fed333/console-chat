@@ -6,6 +6,8 @@ public final class ProtocolMessages {
     public static String UPDATE_CHAT_USER_COMMAND = "UPDATE_USER:";
     public static String DISCONNECT_CHAT_USER_COMMAND = "DISCONNECT_USER:";
     public static String LUNA_SERVER_PROMPT_COMMAND = "SEND_LUNA:";
+    public static final String CLOSE_SERVER_PROMPT_COMMAND = "CLOSE:";
+
 
     public static final String CLIENT_QUIT_COMMAND = "QUIT";
 

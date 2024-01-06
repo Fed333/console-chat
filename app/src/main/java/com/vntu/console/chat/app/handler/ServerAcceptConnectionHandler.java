@@ -69,6 +69,7 @@ public class ServerAcceptConnectionHandler {
             }
 
         });
+        chatUserConnectionRequestHandler.setDaemon(true);
         chatUserConnectionRequestHandler.start();
     }
 

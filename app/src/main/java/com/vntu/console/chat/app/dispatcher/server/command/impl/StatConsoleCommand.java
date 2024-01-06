@@ -22,7 +22,6 @@ public class StatConsoleCommand implements ConsoleCommand {
 
     private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
     private final ServerOutMessagePrinter serverOutMessagePrinter;
-    private final ChatUserService chatUserService;
     private final StatChatUserService statChatUserService;
     private final Converter<StatChatUser, String> statChatUserToJsonConverter;
 

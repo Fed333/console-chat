@@ -25,21 +25,21 @@ public class ChatUserOutMessagePrinter extends MessagePrinter {
     }
 
     public void printlnMessage(String message, PrintWriter printWriter) {
-        printWriter.println(message);
+        monitoringOut.println(message);
 
-        consoleOutPrintln(message);
+        printWriter.println(message);
     }
 
     public void printMessage(String message, PrintWriter printWriter) {
-        printWriter.print(message);
+        monitoringOut.print(message);
 
-        consoleOutPrint(message);
+        printWriter.print(message);
     }
 
     public void printfMessage(String message, PrintWriter printWriter, Object... args) {
-        printWriter.printf(message, args);
+        monitoringOut.printf(message, args);
 
-        consoleOutPrintf(message, args);
+        printWriter.printf(message, args);
     }
 
     public void printPrompt(ChatUser chatUser) {

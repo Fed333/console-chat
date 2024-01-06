@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -26,6 +27,20 @@ public class ChatUserSockets {
 
     public Socket getSocket(Integer chatUserId) {
         return chatUsersSockets.get(chatUserId);
+    }
+
+    public Socket getSocket(String chatUserName) {
+        String[] chatUserParams = chatUserName.split("#");
+
+        if (chatUserParams.length < 2) {
+            return null;
+        }
+
+        //TODO probably need the nickname check.
+        String nickname = chatUserParams[0];
+        Integer id = Integer.parseInt(chatUserParams[1]);
+
+        return chatUsersSockets.get(id);
     }
 
     public List<Socket> getLunaUserSockets() {

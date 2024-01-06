@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +16,10 @@ public class ChatUserService {
 
     public Optional<ChatUser> findByIdAndNickname(Integer id, String nickname) {
         return repository.findByIdAndNickname(id, nickname);
+    }
+
+    public ChatUser save(ChatUser chatUser) {
+        return repository.save(chatUser);
     }
 
     public ChatUser createChatUser(String nickname) {

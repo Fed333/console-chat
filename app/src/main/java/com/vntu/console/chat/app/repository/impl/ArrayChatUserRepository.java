@@ -47,8 +47,8 @@ public class ArrayChatUserRepository implements ChatUserRepository {
     public ChatUser save(ChatUser user) {
         if (user.getId() == null) {
             user.setId(sequenceId.incrementAndGet());
+            log.info("Add new ChatUser: {}", user);
         }
-        log.info("Add new ChatUser: {}", user);
         chatUsers.put(user.getId(), user);
         return user;
     }

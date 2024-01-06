@@ -1,7 +1,5 @@
 package com.vntu.console.chat.app.network;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
@@ -9,6 +7,7 @@ import com.vntu.console.chat.app.entity.ChatUser;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CREATED_CHAT_USER_COMMAND;
+import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.UPDATE_CHAT_USER_COMMAND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class SocketClient {
     private final ChatUserService chatUserService;
     private final InputParamsExtractor paramsExtractor;
     private final ChatUserOutMessagePrinter messagePrinter;
-    private final ObjectMapper objectMapper;
+    private final Converter<String, ChatUser> jsonToChatUserConverter;
 
     private final AtomicReference<ChatUser> clientChatUser;
 
@@ -46,18 +46,17 @@ public class SocketClient {
             log.info("Start client send requests thread...");
 
             awaitForCreatedChatUserRetrievalFromServer(createdChatUserRetrievalLatch);
-            ChatUser chatUser = clientChatUser.get();
 
-            log.info("Retrieved chatUser {}", chatUser);
+            log.info("Retrieved chatUser {}", clientChatUser.get());
 
             PrintWriter out = getPrintWriter(clientSocket);
             Scanner in = new Scanner(System.in);
             while (true) {
-                messagePrinter.printPrompt(chatUser);
+                messagePrinter.printPrompt(clientChatUser.get());
                 String messageLine = in.nextLine();
                 log.info("Prompted chatUser message: {}", messageLine);
 
-                messagePrinter.printPrompt(chatUser, out);
+                messagePrinter.printPrompt(clientChatUser.get(), out);
                 out.println(messageLine);
                 out.flush();
             }
@@ -73,9 +72,8 @@ public class SocketClient {
                 messagePrinter.printlnMessage(inputLine);
                 if (inputLine.contains(CREATED_CHAT_USER_COMMAND)) {
                     String createdUserJson = extractCreatedUserJson(inputLine);
-                    ObjectReader objectReader = objectMapper.readerFor(ChatUser.class);
 
-                    ChatUser createdChatUser = objectReader.readValue(createdUserJson);
+                    ChatUser createdChatUser = jsonToChatUserConverter.convert(createdUserJson);
 
                     clientChatUser.set(createdChatUser);
                     createdChatUserRetrievalLatch.countDown();
@@ -86,6 +84,16 @@ public class SocketClient {
                     log.info("Received server message: {}", inputLine);
                     messagePrinter.printlnMessage(inputLine);
                     messagePrinter.printPrompt(clientChatUser.get());
+
+                    if (inputLine.contains(UPDATE_CHAT_USER_COMMAND)) {
+                        String updatedUserJson = extractUpdateUserJson(inputLine);
+
+                        ChatUser updatedChatUser = jsonToChatUserConverter.convert(updatedUserJson);
+                        log.info("Updating chatUser with {}", updatedChatUser);
+                        clientChatUser.set(updatedChatUser);
+                        log.info("Updated chatUser is now {}", clientSocket);
+                    }
+
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -138,7 +146,15 @@ public class SocketClient {
     }
 
     private String extractCreatedUserJson(String inputLine) {
-        return inputLine.substring(inputLine.indexOf(CREATED_CHAT_USER_COMMAND) + CREATED_CHAT_USER_COMMAND.length());
+        return extractUserJsonFromCommand(CREATED_CHAT_USER_COMMAND, inputLine);
+    }
+
+    private String extractUpdateUserJson(String inputLine) {
+        return extractUserJsonFromCommand(UPDATE_CHAT_USER_COMMAND, inputLine);
+    }
+
+    private String extractUserJsonFromCommand(String command, String inputLine) {
+        return inputLine.substring(inputLine.indexOf(command) + command.length());
     }
 
     private String promptNicknameIfNotSpecified(ExtractedParams params) {

@@ -9,6 +9,7 @@ import com.vntu.console.chat.app.network.socket.ChatUserSockets;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class ServerAcceptConnectionHandler {
     private final ChatUserSockets chatUserSockets;
     private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
     private final ServerOutMessagePrinter serverOutMessagePrinter;
-    private final ObjectMapper objectMapper;
+    private final Converter<ChatUser, String> chatUserToJsonConverter;
     private final ServerRequestMessageHandler serverRequestMessageHandler;
 
     public void startConnectionHandling(Socket socket) {
@@ -40,7 +41,7 @@ public class ServerAcceptConnectionHandler {
             chatUserSocketThreadHolder.setChatUserSocket(socket);
             PrintWriter out = chatUserSocketThreadHolder.getChatUserWriter();
 
-            String jsonChatUser = serializeChatUserToJson(chatUser);
+            String jsonChatUser = chatUserToJsonConverter.convert(chatUser);
 
             serverOutMessagePrinter.printPrompt(out);
             out.print(CREATED_CHAT_USER_COMMAND);
@@ -64,14 +65,5 @@ public class ServerAcceptConnectionHandler {
 
         });
         chatUserConnectionRequestHandler.start();
-    }
-
-    private String serializeChatUserToJson(ChatUser chatUser) {
-        try {
-            return objectMapper.writeValueAsString(chatUser);
-        } catch (JsonProcessingException e) {
-            log.error("Couldn't serialize a chatUser object to a JSON string.", e);
-            throw new RuntimeException(e);
-        }
     }
 }

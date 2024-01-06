@@ -43,4 +43,8 @@ public class ChatUserService {
     public List<ChatUser> findAllLunaChatUsers() {
         return repository.findAllByLunaUser(true);
     }
+
+    public void delete(ChatUser chatUser) {
+        repository.delete(chatUser);
+    }
 }

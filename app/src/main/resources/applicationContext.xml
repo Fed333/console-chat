@@ -27,6 +27,11 @@
         <constructor-arg>
             <bean class="java.util.concurrent.atomic.AtomicReference"/>
         </constructor-arg>
+        <constructor-arg>
+            <bean class="java.util.concurrent.atomic.AtomicBoolean">
+                <constructor-arg type="boolean" value="false"/>
+            </bean>
+        </constructor-arg>
     </bean>
 
     <bean name="chatUserService" class="com.vntu.console.chat.app.service.ChatUserService">
@@ -86,6 +91,7 @@
                 <entry key="STAT" value-ref="serverStatConsoleCommand"/>
                 <entry key="MESG" value-ref="serverMessageConsoleCommand"/>
                 <entry key="BCST" value-ref="serverBroadcastConsoleCommand"/>
+                <entry key="QUIT" value-ref="serverQuitConsoleCommand"/>
             </map>
         </constructor-arg>
     </bean>
@@ -95,6 +101,7 @@
     <bean name="serverStatConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.StatConsoleCommand"/>
     <bean name="serverMessageConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.MessageConsoleCommand"/>
     <bean name="serverBroadcastConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.BroadcastConsoleCommand"/>
+    <bean name="serverQuitConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.QuitConsoleCommand"/>
 
     <bean name="protocolMessageBuilder" class="com.vntu.console.chat.app.network.protocol.ProtocolMessageBuilder"/>
 

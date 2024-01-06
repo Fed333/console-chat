@@ -17,17 +17,16 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CREATED_CHAT_USER_COMMAND;
-import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.UPDATE_CHAT_USER_COMMAND;
+import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public class SocketClient {
 
     private static final String NICKNAME_PARAMS_FLAG = "--nickname";
-    private static final String QUIT_COMMAND = "QUIT";
 
     private final ChatUserService chatUserService;
     private final InputParamsExtractor paramsExtractor;
@@ -35,6 +34,7 @@ public class SocketClient {
     private final Converter<String, ChatUser> jsonToChatUserConverter;
 
     private final AtomicReference<ChatUser> clientChatUser;
+    private final AtomicBoolean isClientDisconnected;
 
     public void startClient(Socket clientSocket, String[] args) {
         log.info("Start client application...");
@@ -51,7 +51,7 @@ public class SocketClient {
 
             PrintWriter out = getPrintWriter(clientSocket);
             Scanner in = new Scanner(System.in);
-            while (true) {
+            while (!isClientDisconnected.get()) {
                 messagePrinter.printPrompt(clientChatUser.get());
                 String messageLine = in.nextLine();
                 log.info("Prompted chatUser message: {}", messageLine);
@@ -92,6 +92,11 @@ public class SocketClient {
                         log.info("Updating chatUser with {}", updatedChatUser);
                         clientChatUser.set(updatedChatUser);
                         log.info("Updated chatUser is now {}", clientSocket);
+                    } else if (inputLine.contains(DISCONNECT_CHAT_USER_COMMAND)) {
+                        log.info("Disconnect user: {}", clientChatUser.get());
+                        messagePrinter.printlnMessage("Disconnected");
+                        isClientDisconnected.set(true);
+                        break;
                     }
 
                 }
@@ -111,6 +116,7 @@ public class SocketClient {
         try {
             chatUserSenderThread.join();
             chatUserReceiverThread.join();
+            log.info("User has been disconnected. Shutdown the client application.");
         } catch (InterruptedException e) {
             log.error("Couldn't join server threads.", e);
             throw new RuntimeException(e);

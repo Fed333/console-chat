@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.time.Instant;
 
+import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CLIENT_QUIT_COMMAND;
 import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.CREATED_CHAT_USER_COMMAND;
 
 @Slf4j
@@ -55,6 +56,11 @@ public class ServerAcceptConnectionHandler {
                     requestMessage = in.readLine();
                     serverOutMessagePrinter.printlnPromptMessage(requestMessage);
                     serverRequestMessageHandler.handleRequest(requestMessage);
+
+                    if (isQuitCommandEntered(requestMessage)) {
+                        log.info("Disconnect client");
+                        break;
+                    }
                 } while (requestMessage != null);
 
             } catch (IOException e) {
@@ -64,5 +70,9 @@ public class ServerAcceptConnectionHandler {
 
         });
         chatUserConnectionRequestHandler.start();
+    }
+
+    private boolean isQuitCommandEntered(String requestMessage) {
+        return requestMessage.toUpperCase().startsWith(CLIENT_QUIT_COMMAND);
     }
 }

@@ -9,15 +9,12 @@ import com.vntu.console.chat.app.network.socket.ChatUserSocketThreadHolder;
 import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.converter.Converter;
 
 import java.io.PrintWriter;
 
-import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.UPDATE_CHAT_USER_COMMAND;
-
 @Slf4j
 @RequiredArgsConstructor
-public class NameConsoleCommand implements ConsoleCommand {
+public class EchoConsoleCommand implements ConsoleCommand {
 
     private final ChatUserSocketThreadHolder chatUserSocketThreadHolder;
     private final ServerOutMessagePrinter serverOutMessagePrinter;
@@ -26,18 +23,23 @@ public class NameConsoleCommand implements ConsoleCommand {
 
     @Override
     public void process(ChatUserRequest request) {
-        log.info("Process NAME command for chatUser: {}", request.getChatUser());
+        log.info("Process ECHO command for chatUser: {}", request.getChatUser());
 
         ChatUser chatUser = request.getChatUser();
-        String name = request.getParameterByOrder(0);
+        String turnEcho = request.getParameterByOrder(0);
 
-        if (name == null) {
-            log.info("Name wasn't found!");
+        if (turnEcho == null) {
+            log.info("No echo options specified!");
             return;
         }
 
-        chatUser.setNickname(name);
-        chatUserService.save(chatUser);
+        if (isOn(turnEcho)) {
+            chatUser.setLunaUser(true);
+        } else if (isOff(turnEcho)) {
+            chatUser.setLunaUser(false);
+        } else {
+            log.info("Wrong ECHO parameter: {}", turnEcho);
+        }
 
         PrintWriter chatUserWriter = chatUserSocketThreadHolder.getChatUserWriter();
 
@@ -45,4 +47,11 @@ public class NameConsoleCommand implements ConsoleCommand {
         chatUserWriter.flush();
     }
 
+    private boolean isOn(String turnEcho) {
+        return turnEcho.equalsIgnoreCase("ON");
+    }
+
+    private boolean isOff(String turnEcho) {
+        return turnEcho.equalsIgnoreCase("OFF");
+    }
 }

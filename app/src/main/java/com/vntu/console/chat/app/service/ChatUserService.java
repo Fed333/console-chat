@@ -23,11 +23,12 @@ public class ChatUserService {
     }
 
     public ChatUser save(ChatUser chatUser) {
+        chatUser.setNickname(replaceNicknameSpaces(chatUser.getNickname()));
         return repository.save(chatUser);
     }
 
     public ChatUser createChatUser(String nickname) {
-        nickname = nickname.replace(' ', '_');
+        nickname = replaceNicknameSpaces(nickname);
         ChatUser chatUser = ChatUser.builder()
                 .nickname(nickname)
                 .lunaUser(true).build();
@@ -41,5 +42,10 @@ public class ChatUserService {
 
     public void delete(ChatUser chatUser) {
         repository.delete(chatUser);
+    }
+
+    private String replaceNicknameSpaces(String nickname) {
+        nickname = nickname.replace(' ', '_');
+        return nickname;
     }
 }

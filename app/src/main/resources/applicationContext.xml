@@ -33,6 +33,8 @@
         <constructor-arg ref="chatUserRepository"/>
     </bean>
 
+    <bean name="statChatUserService" class="com.vntu.console.chat.app.service.StatChatUserService"/>
+
     <bean name="chatUserRepository" class="com.vntu.console.chat.app.repository.impl.ArrayChatUserRepository">
         <constructor-arg>
             <bean class="java.util.concurrent.ConcurrentHashMap"/>
@@ -81,12 +83,14 @@
             <map>
                 <entry key="NAME" value-ref="serverNameConsoleCommand"/>
                 <entry key="ECHO" value-ref="serverEchoConsoleCommand"/>
+                <entry key="STAT" value-ref="serverStatConsoleCommand"/>
             </map>
         </constructor-arg>
     </bean>
 
     <bean name="serverNameConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.NameConsoleCommand"/>
     <bean name="serverEchoConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.EchoConsoleCommand"/>
+    <bean name="serverStatConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.StatConsoleCommand"/>
 
     <bean name="protocolMessageBuilder" class="com.vntu.console.chat.app.network.protocol.ProtocolMessageBuilder"/>
 

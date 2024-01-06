@@ -24,6 +24,10 @@ public class ChatUserSockets {
         chatUsersSockets.put(chatUserId, socket);
     }
 
+    public Socket getSocket(Integer chatUserId) {
+        return chatUsersSockets.get(chatUserId);
+    }
+
     public List<Socket> getLunaUserSockets() {
         List<ChatUser> lunaChatUsers = chatUserService.findAllLunaChatUsers();
 

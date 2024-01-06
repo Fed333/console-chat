@@ -50,13 +50,12 @@ public class ServerAcceptConnectionHandler {
 
             BufferedReader in = chatUserSocketThreadHolder.getChatUserReader();
             try {
-                String requestMessage = in.readLine();
-                while (requestMessage != null) {
-                    serverOutMessagePrinter.printlnPromptMessage(requestMessage);
-
+                String requestMessage;
+                do  {
                     requestMessage = in.readLine();
+                    serverOutMessagePrinter.printlnPromptMessage(requestMessage);
                     serverRequestMessageHandler.handleRequest(requestMessage);
-                }
+                } while (requestMessage != null);
 
             } catch (IOException e) {
                 log.error("Couldn't read a line from chatUser socket input stream.", e);

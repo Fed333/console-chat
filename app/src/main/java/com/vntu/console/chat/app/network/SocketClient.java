@@ -4,7 +4,6 @@ import com.vntu.console.chat.app.component.input.params.ExtractedParams;
 import com.vntu.console.chat.app.component.input.params.InputParamsExtractor;
 import com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter;
 import com.vntu.console.chat.app.entity.ChatUser;
-import com.vntu.console.chat.app.service.ChatUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,10 +24,6 @@ import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.*;
 @RequiredArgsConstructor
 public class SocketClient {
 
-    private static final String NICKNAME_PARAMS_FLAG = "--nickname";
-
-    private final ChatUserService chatUserService;
-    private final InputParamsExtractor paramsExtractor;
     private final ChatUserOutMessagePrinter messagePrinter;
     private final Converter<String, ChatUser> jsonToChatUserConverter;
 
@@ -38,7 +32,6 @@ public class SocketClient {
 
     public void startClient(Socket clientSocket, String[] args) {
         log.info("Start client application...");
-        ExtractedParams params = paramsExtractor.extractedParams(args);
 
         CountDownLatch createdChatUserRetrievalLatch = new CountDownLatch(1);
 
@@ -80,7 +73,7 @@ public class SocketClient {
                     createdChatUserRetrievalLatch.countDown();
                 }
 
-                while (inputLine != null && !isClientDisconnected.get()) {
+                while (!isClientDisconnected.get()) {
                     inputLine = in.readLine();
                     log.info("Received server message: {}", inputLine);
 
@@ -107,13 +100,6 @@ public class SocketClient {
         });
         chatUserReceiverThread.setDaemon(true);
         chatUserReceiverThread.start();
-//        while(true) {
-////            messagePrinter.printPrompt(chatUser);
-////            String command = in.nextLine();
-////            if (command.equalsIgnoreCase(QUIT_COMMAND)) {
-////                break;
-////            }
-//        }
 
         try {
             chatUserReceiverThread.join();
@@ -162,25 +148,5 @@ public class SocketClient {
 
     private String extractUserJsonFromCommand(String command, String inputLine) {
         return inputLine.substring(inputLine.indexOf(command) + command.length());
-    }
-
-    private String promptNicknameIfNotSpecified(ExtractedParams params) {
-        Map<String, Object> paramsMap = params.getParamsMap();
-
-        String nickname;
-        if (paramsMap.containsKey(NICKNAME_PARAMS_FLAG)) {
-            nickname = (String) paramsMap.get(NICKNAME_PARAMS_FLAG);
-        } else {
-            nickname = promptNickName();
-        }
-        return nickname;
-    }
-
-    private String promptNickName() {
-        String nickname;
-        Scanner in = new Scanner(System.in);
-        messagePrinter.printPromptMessage("client",1, "Enter name: ");
-        nickname = in.nextLine();
-        return nickname;
     }
 }

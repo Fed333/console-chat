@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
-import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.LUNA_SERVER_PROMPT_COMMAND;
+import static com.vntu.console.chat.app.network.protocol.ProtocolMessages.BROADCAST_SERVER_PROMPT_COMMAND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,8 +29,8 @@ public class ServerMessagePromptCommandHandler {
         ExtractedParams extractedParams = inputParamsExtractor.extractParams(promptCommand);
 
         //TODO add command dispatching here...
-        if (Objects.equals(command, LUNA_SERVER_PROMPT_COMMAND)) {
-            broadcastMessagesSender.broadCastMessagesToLunaChatUsers((String) extractedParams.getParamsList().get(0));
+        if (Objects.equals(command, BROADCAST_SERVER_PROMPT_COMMAND)) {
+            broadcastMessagesSender.broadCastMessagesToChatUsers((String) extractedParams.getParamsList().get(0));
         }
     }
 }

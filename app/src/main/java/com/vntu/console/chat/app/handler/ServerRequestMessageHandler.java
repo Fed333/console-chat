@@ -42,16 +42,9 @@ public class ServerRequestMessageHandler {
         ExtractedParams extractedParams = inputParamsExtractor.extractParams(commandMessage);
 
         ChatUser chatUser = chatUserOptional.get();
-        ChatUserRequest chatUserRequest = new ChatUserRequest(chatUser, extractedParams);
+        ChatUserRequest chatUserRequest = new ChatUserRequest(chatUser, extractedParams, commandMessage);
 
         serverDispatcherCommand.dispatchCommand(command, chatUserRequest);
-
-        if (chatUser.isLunaUser()) {
-            log.info("Send echo message to luna user.");
-            PrintWriter chatUserWriter = chatUserSocketThreadHolder.getChatUserWriter();
-            serverOutMessagePrinter.printlnPromptMessage(commandMessage, chatUserWriter);
-            chatUserWriter.flush();
-        }
 
         log.info("End request handling");
     }

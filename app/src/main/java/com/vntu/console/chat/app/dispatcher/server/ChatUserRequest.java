@@ -15,6 +15,9 @@ public class ChatUserRequest {
 
     private ExtractedParams params;
 
+    @Getter
+    private String commandMessage;
+
     public String getParameterByOrder(int index) {
         int size = params.getParamsList().size();
         if (size == 0 || size < index + 1) {

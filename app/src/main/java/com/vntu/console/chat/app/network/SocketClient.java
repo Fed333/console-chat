@@ -80,11 +80,9 @@ public class SocketClient {
                     createdChatUserRetrievalLatch.countDown();
                 }
 
-                while (inputLine != null) {
+                while (inputLine != null && !isClientDisconnected.get()) {
                     inputLine = in.readLine();
                     log.info("Received server message: {}", inputLine);
-                    messagePrinter.printlnMessage(inputLine);
-                    messagePrinter.printPrompt(clientChatUser.get());
 
                     if (inputLine.contains(UPDATE_CHAT_USER_COMMAND)) {
                         String updatedUserJson = extractUpdateUserJson(inputLine);
@@ -97,8 +95,10 @@ public class SocketClient {
                         log.info("Disconnect user: {}", clientChatUser.get());
                         messagePrinter.printlnMessage("Disconnected");
                         isClientDisconnected.set(true);
-                        break;
                     }
+
+                    messagePrinter.printlnMessage(inputLine);
+                    messagePrinter.printPrompt(clientChatUser.get());
 
                 }
             } catch (IOException e) {

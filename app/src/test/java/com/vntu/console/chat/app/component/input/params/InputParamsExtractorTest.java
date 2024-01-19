@@ -6,9 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatList;
@@ -22,12 +20,39 @@ public class InputParamsExtractorTest {
 
 
     @Test
+    public void extractCommand_shouldExtractIfOnlyCommandGiven() {
+        String expected = "command";
+
+        String actual = extractor.extractCommand("command");
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     public void extractCommand_shouldExtractToFirstSpace() {
         String expected = "command";
 
         String actual = extractor.extractCommand("command  --param1 --param2 --param3");
 
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void extractParams_shouldReturnEmptyParamsMapObjectIfOnlyCommandGiven() {
+        Map<String, Object> expected = new HashMap<>();
+
+        Map<String, Object> actual = extractor.extractParams("command").getParamsMap();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void extractParams_shouldReturnEmptyParamsListObjectIfOnlyCommandGiven() {
+        List<Object> expected = new ArrayList<>();
+
+        List<Object> actual = extractor.extractParams("command").getParamsList();
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

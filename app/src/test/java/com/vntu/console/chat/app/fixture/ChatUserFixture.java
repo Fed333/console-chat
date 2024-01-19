@@ -13,4 +13,10 @@ public class ChatUserFixture {
     public static ChatUser createTestOne() {
         return new ChatUser(null, "testuser", true, Instant.now());
     }
+
+    public static ChatUser createWith(Integer id, String nickname) {
+        return ChatUser.builder()
+                .id(id)
+                .nickname(nickname).build();
+    }
 }

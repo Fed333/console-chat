@@ -10,6 +10,7 @@
 
     <context:property-placeholder location="application.properties"/>
     <context:annotation-config/>
+    <context:component-scan base-package="com.vntu.console.chat.app.configuration"/>
 
     <bean name="consoleChatApplicationRunner" class="com.vntu.console.chat.app.runner.ConsoleChatApplicationRunner">
         <constructor-arg ref="socketServer"/>
@@ -18,16 +19,26 @@
 
     <bean name="socketServer" class="com.vntu.console.chat.app.network.SocketServer">
         <constructor-arg ref="serverOutMessagePrinter"/>
+        <constructor-arg ref="chatUserService"/>
+        <constructor-arg ref="serverShutdown"/>
+        <constructor-arg ref="serverAcceptConnectionHandler"/>
     </bean>
     <bean name="socketClient" class="com.vntu.console.chat.app.network.SocketClient">
-        <constructor-arg ref="chatUserService"/>
-        <constructor-arg ref="inputParamsExtractor"/>
-        <constructor-arg ref="chatUserOutMessagePrinter"/>
+        <constructor-arg>
+            <bean class="java.util.concurrent.atomic.AtomicReference"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.util.concurrent.atomic.AtomicBoolean">
+                <constructor-arg type="boolean" value="false"/>
+            </bean>
+        </constructor-arg>
     </bean>
 
     <bean name="chatUserService" class="com.vntu.console.chat.app.service.ChatUserService">
         <constructor-arg ref="chatUserRepository"/>
     </bean>
+
+    <bean name="statChatUserService" class="com.vntu.console.chat.app.service.StatChatUserService"/>
 
     <bean name="chatUserRepository" class="com.vntu.console.chat.app.repository.impl.ArrayChatUserRepository">
         <constructor-arg>
@@ -42,6 +53,60 @@
 
     <bean name="inputParamsExtractor" class="com.vntu.console.chat.app.component.input.params.InputParamsExtractor"/>
 
-    <bean name="chatUserOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ChatUserOutMessagePrinter"/>
-    <bean name="serverOutMessagePrinter" class="com.vntu.console.chat.app.component.output.ServerOutMessagePrinter"/>
+    <bean name="serverShutdown" class="java.util.concurrent.atomic.AtomicBoolean">
+        <constructor-arg value="false"/>
+    </bean>
+
+    <bean name="serverAcceptConnectionHandler" class="com.vntu.console.chat.app.handler.ServerAcceptConnectionHandler"/>
+    <bean name="serverMessagePromptHandler" class="com.vntu.console.chat.app.handler.ServerMessagePromptCommandHandler"/>
+    <bean name="serverRequestMessageHandler" class="com.vntu.console.chat.app.handler.ServerRequestMessageHandler"/>
+
+    <bean name="chatUserSockets" class="com.vntu.console.chat.app.network.socket.ChatUserSockets">
+        <constructor-arg>
+            <bean class="java.util.concurrent.ConcurrentHashMap"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="chatUserSocketThreadHolder" class="com.vntu.console.chat.app.network.socket.ChatUserSocketThreadHolder">
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.lang.ThreadLocal"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="broadcastMessagesSender" class="com.vntu.console.chat.app.network.component.BroadcastMessagesSender"/>
+
+    <bean name="chatUserFromPromptExtractor" class="com.vntu.console.chat.app.network.protocol.ChatUserFromPromptExtractor"/>
+
+    <bean name="serverDispatcherCommand" class="com.vntu.console.chat.app.dispatcher.server.DispatcherCommand">
+        <constructor-arg>
+            <map>
+                <entry key="NAME" value-ref="serverNameConsoleCommand"/>
+                <entry key="ECHO" value-ref="serverEchoConsoleCommand"/>
+                <entry key="STAT" value-ref="serverStatConsoleCommand"/>
+                <entry key="MESG" value-ref="serverMessageConsoleCommand"/>
+                <entry key="BCST" value-ref="serverBroadcastConsoleCommand"/>
+                <entry key="QUIT" value-ref="serverQuitConsoleCommand"/>
+                <entry key="TIME" value-ref="serverTimeConsoleCommand"/>
+                <entry key="HELP" value-ref="serverHelpConsoleCommand"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean name="serverNameConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.NameConsoleCommand"/>
+    <bean name="serverEchoConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.EchoConsoleCommand"/>
+    <bean name="serverStatConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.StatConsoleCommand"/>
+    <bean name="serverMessageConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.MessageConsoleCommand"/>
+    <bean name="serverBroadcastConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.BroadcastConsoleCommand"/>
+    <bean name="serverQuitConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.QuitConsoleCommand"/>
+    <bean name="serverTimeConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.TimeConsoleCommand"/>
+    <bean name="serverHelpConsoleCommand" class="com.vntu.console.chat.app.dispatcher.server.command.impl.HelpConsoleCommand"/>
+
+    <bean name="protocolMessageBuilder" class="com.vntu.console.chat.app.network.protocol.ProtocolMessageBuilder"/>
+
 </beans>

@@ -85,3 +85,10 @@ You can build the code with the following gradle command.
 You can run the project either with IDE means or by running the following command in a terminal.
 > `java -jar app/build/libs/console-chat-1.0.jar`
 
+## Demo examples
+
+### Console Chat terminals view
+![console-chat-terminals.png](demo/console-chat-terminals.png)
+
+### Messaging between chat users
+![messaging-between-users.gif](demo/messaging-between-users.gif)
